@@ -9,3 +9,4 @@ pinax-theme-bootstrap==2.0.1
 Pinax==0.9a2
 django-celery==2.5.1
 redis==2.4.11
+django-kombu==0.9.4

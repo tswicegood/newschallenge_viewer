@@ -128,6 +128,7 @@ INSTALLED_APPS = (
     "gunicorn",
     "nc_viewer",
     "djcelery",
+    "djkombu",
 )
 
 # A sample logging configuration. The only tangible logging
