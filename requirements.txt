@@ -7,3 +7,4 @@ wsgiref==0.1.2
 gunicorn==0.14.0
 pinax-theme-bootstrap==2.0.1
 Pinax==0.9a2
+django-celery==2.5.1
