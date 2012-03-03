@@ -2,10 +2,10 @@ from django.db import models
 
 
 class Entrant(models.Model):
-    name = models.CharField(max_length=100)
-    organization = models.CharField(max_length=100)
-    twitter = models.CharField(max_length=100)
-    country = models.CharField(max_length=100)
+    name = models.CharField(max_length=250)
+    organization = models.CharField(max_length=250)
+    twitter = models.CharField(max_length=250)
+    country = models.CharField(max_length=250)
 
 
 class Entry(models.Model):
@@ -20,9 +20,9 @@ class Entry(models.Model):
     already_done = models.TextField(default="")
     sustain = models.TextField(default="")
 
-    amount = models.CharField(max_length=100, default="")  # Maybe they're asking for lots?
-    time = models.CharField(max_length=100, default="")
-    total_cost = models.CharField(max_length=100, default="")
+    amount = models.CharField(max_length=250, default="")  # Maybe they're asking for lots?
+    time = models.CharField(max_length=250, default="")
+    total_cost = models.CharField(max_length=250, default="")
 
     # Allow to be empty, because some people can't fill out a form
     entrant = models.ForeignKey(Entrant, null=True, blank=True)
