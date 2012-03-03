@@ -164,3 +164,11 @@ if "REDISTOGO_URL" in os.environ:
     CELERY_RESULT_HOST = params.hostname
     CELERY_RESULT_PORT = params.port
     CELERY_RESULT_DB = 0
+
+from celery.schedules import crontab
+CELERYBEAT_SCHEDULE = {
+    "sync-entries": {
+        "task": "nc_viewer.tasks.grab_entries",
+        "schedule": crontab(minute="*/5"),
+    }
+}
