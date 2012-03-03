@@ -99,28 +99,31 @@ def scrap_page(url):
         entry["data"][key.strip()] = value.strip()
     return entry
 
+def cmd():
+    entry_urls = find_all_entries()
+    print "Found %d entries" % len(entry_urls)
+    for url in entry_urls:
+        print "processing %s..." % url
+        data = scrap_page(url)
+        if not data["invalid"]:
+            entrant_data = (data["data"].pop("entrant_name"), data["data"].pop("twitter"),
+                    data["data"].pop("organization"), data["data"].pop("country"), )
+
+            if "".join(entrant_data) != "":
+                entrant, created = Entrant.objects.get_or_create(
+                        name=entrant_data[0],
+                        twitter=entrant_data[1],
+                        organization=entrant_data[2],
+                        country=entrant_data[3])
+        if Entry.objects.filter(url=data["url"]).count() > 0:
+            continue
+        if data["invalid"]:
+            Entry.objects.create(url=data["url"], invalid=True)
+        else:
+            Entry.objects.create(title=data["title"], url=data["url"], **data["data"])
+
 
 # Now we need to process each page and scrap the data from it.
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
-        entry_urls = find_all_entries()
-        print "Found %d entries" % len(entry_urls)
-        for url in entry_urls:
-            print "processing %s..." % url
-            data = scrap_page(url)
-            if not data["invalid"]:
-                entrant_data = (data["data"].pop("entrant_name"), data["data"].pop("twitter"),
-                        data["data"].pop("organization"), data["data"].pop("country"), )
-
-                if "".join(entrant_data) != "":
-                    entrant, created = Entrant.objects.get_or_create(
-                            name=entrant_data[0],
-                            twitter=entrant_data[1],
-                            organization=entrant_data[2],
-                            country=entrant_data[3])
-            if Entry.objects.filter(url=data["url"]).count() > 0:
-                continue
-            if data["invalid"]:
-                Entry.objects.create(url=data["url"], invalid=True)
-            else:
-                Entry.objects.create(url=data["url"], **data["data"])
+        cmd()
