@@ -4,26 +4,82 @@
 
 {% block body %}
 
-<table class="table table-striped">
-	<thead>
-		<tr>
-			<th>Name</th>
-			<th>Summary</th>
-			<th>Amount</th>
-		</tr>
-	</thead>
+<div class="hero-unit">
+    <h1>News Challenge Stats</h1>
 
-	<tbody>
-		{% for object in object_list %}
-		<tr>
-			<td>
-				<a href="{{ object.url }}">{{ object.title }}</a>
-			</td>
+    <p>
+        This site, which is not affiliated with the
+        <a href="http://newschallenge.tumblr.com/">Knight News Challenge</a>, aims
+        to provide you with a scannable list of all of the entries along with some
+        high-level statistics.
+    </p>
+</div>
 
-			<td>{{ object.what }}</td>
-			<td>{{ object.amount }}</td>
-		</tr>
-		{% endfor %}
-	</tbody>
-</table>
+<div class="row">
+    <div class="span4">
+        <div class="well">
+            <h2>Statistics</h2>
+
+            <dl>
+                <dt>Total Entrants</dt>
+                <dd>{{ entries_count }}</dd>
+
+                <dt>Invalid Entries</dt>
+                <dd>{{ invalid_entries_count }}</dd>
+            </dl>
+
+            <div class="modal hide" id="invalidModal">
+              <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h3>Invalid Entries</h3>
+              </div>
+              <div class="modal-body">
+                <p>
+                    These might be perfectly valid entries, but the entries
+                    did not follow the standardized form in such a way that
+                    their entry can be easily parsed.
+                </p>
+
+                <p>
+                    This project is open-source, so if you'd like to help out
+                    with the parser so we can get all of these entries added,
+                    please visit the <a href="#TODO">GitHub repo</a>.
+                </p>
+              </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="span8">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Summary</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for object in object_list %}
+                <tr>
+                    <td>
+                        <a href="{{ object.url }}">{{ object.title }}</a>
+                    </td>
+
+                    <td>{{ object.what }}</td>
+                    <td>{{ object.amount }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+$(function() {
+    $("#invalidTooltip").popover();
+});
+</script>
 {% endblock %}
