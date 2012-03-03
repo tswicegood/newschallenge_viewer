@@ -155,14 +155,8 @@ LOGGING = {
 
 import djcelery
 djcelery.setup_loader()
-
-BROKER_URL = "%s/0" % os.environ["REDISTOGO_URL"]
-CELERY_RESULT_BACKEND = "redis"
-import urlparse
-params = urlparse.urlparse(os.environ["REDISTOGO_URL"])
-CELERY_RESULT_HOST = params.hostname
-CELERY_RESULT_PORT = params.port
-CELERY_RESULT_DB = 0
+BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
+CELERY_RESULT_DBURI = DATABASES['default']
 
 from celery.schedules import crontab
 CELERYBEAT_SCHEDULE = {
