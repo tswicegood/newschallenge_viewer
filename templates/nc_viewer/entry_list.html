@@ -1,0 +1,29 @@
+{% extends "less_base.html" %}
+
+{% block topbar_base %}{% endblock %}
+
+{% block body %}
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Summary</th>
+			<th>Amount</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		{% for object in object_list %}
+		<tr>
+			<td>
+				<a href="{{ object.url }}">{{ object.title }}</a>
+			</td>
+
+			<td>{{ object.what }}</td>
+			<td>{{ object.amount }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

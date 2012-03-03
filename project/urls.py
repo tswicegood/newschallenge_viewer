@@ -1,4 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
+from django.views.generic.list import ListView
+
+from project.nc_viewer.models import Entry
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -14,4 +17,6 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^$', ListView.as_view(queryset=Entry.objects.filter(invalid=False)), name="home")
 )
