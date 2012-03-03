@@ -1,7 +1,7 @@
 # Django settings for newschallenge_viewer project.
 import os
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
