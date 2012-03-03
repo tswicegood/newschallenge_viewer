@@ -19,6 +19,8 @@ urlpatterns = patterns('',
     # url(r'^admin/', include(admin.site.urls)),
 
     url(r'^$', MainPageView.as_view(), name="home"),
-    url(r"^static/(?P.*)$", "django.views.static.serve",
-    		{"document_root": settings.STATIC_ROOT}),
 )
+
+# Do as I say, not as a do.
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+urlpatterns += staticfiles_urlpatterns()
