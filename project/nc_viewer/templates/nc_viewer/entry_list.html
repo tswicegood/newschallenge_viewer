@@ -13,6 +13,10 @@
         to provide you with a scannable list of all of the entries along with some
         high-level statistics.
     </p>
+
+    <p class="chart" id="numberOfSubmissions">
+    </p>
+
 </div>
 
 <div class="row">
@@ -77,9 +81,65 @@
     </div>
 </div>
 
+{% comment %}Really shouldn't hot-link{% endcomment %}
+<script src="http://documentcloud.github.com/underscore/underscore.js"></script>
+<script src="http://mbostock.github.com/d3/d3.v2.js?2.8.0"></script>
 <script>
 $(function() {
     $("#invalidTooltip").popover();
 });
+
+    var numberOfSubmissions = $("#numberOfSubmissions"),
+        data = {{ js_totals|safe }},
+        dataValues = _.values(data),
+        dataKeys = _.keys(data),
+        w = numberOfSubmissions.width() / 19,
+        h = 80,
+        x = d3.scale.linear()
+            .domain([0, 1])
+            .range([0, w]),
+        y = d3.scale.linear()
+            .domain([0, Math.max.apply(Math, dataValues)])
+            .rangeRound([0, h]),
+        chart = d3.select("#numberOfSubmissions").append("svg")
+            .attr("class", "chart")
+            .attr("width", w * 19);
+        // Create the individual bars
+        chart.selectAll("rect").data(dataValues)
+            .enter().append("rect")
+            .attr("x", function(d, i) { console.log("x(" + d + ", " + i +") called"); return x(i) - .5; })
+            .attr("y", function(d) { console.log("y(" + d + ") called"); return h - y(d) - .5})
+            .attr("width", w)
+            .attr("height", function(d) { console.log("y(" + d + ") == " + y(d)); return y(d); });
+
+        // Add label to each of the bars
+        chart.selectAll("text").data(data)
+            .enter().append("text")
+            .attr("x", x)
+            .attr("y", function(d) { return y(d) + y.rangeBand() / 2; })
+            .attr("dx", -3)
+            .attr("dy", ".35em")
+            .attr("text-anchor", "end")
+            .text(String);
+
+        // Add a bar along the bottom
+        chart.append("line")
+            .attr("x1", 0)
+            .attr("x2", w * 19)
+            .attr("y1", h - .5)
+            .attr("y2", h - .5)
+            .style("stroke", "#000");
+
+
 </script>
+<style>
+#numberOfSubmissions {
+    width: 1050px;
+    height: 100px;
+}
+.chart rect {
+    fill: steelblue;
+    stroke: white;
+}
+</style>
 {% endblock %}
