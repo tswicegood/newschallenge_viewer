@@ -167,3 +167,5 @@ CELERYBEAT_SCHEDULE = {
         "schedule": crontab(minute="*/5"),
     }
 }
+
+TUMBLR_API_KEY = os.environ.get("TUMBLR_API_KEY", "")

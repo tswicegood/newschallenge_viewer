@@ -10,6 +10,7 @@ class Entrant(models.Model):
 
 class Entry(models.Model):
     url = models.URLField()
+    created_on = models.DateTimeField()
     invalid = models.BooleanField(default=False)
     title = models.TextField(default="")
     what = models.TextField(default="")
@@ -27,3 +28,5 @@ class Entry(models.Model):
     # Allow to be empty, because some people can't fill out a form
     entrant = models.ForeignKey(Entrant, null=True, blank=True)
 
+    class Meta:
+        ordering = ["-created_on", ]

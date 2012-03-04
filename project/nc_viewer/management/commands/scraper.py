@@ -28,9 +28,14 @@
 # ## The Code
 #
 # Start by importing a few modules that are required
+import datetime
+from django.conf import settings
 from django.core.management.base import NoArgsCommand
+import json
 from pyquery import PyQuery as pq
 import re
+import requests
+import time
 
 from nc_viewer.models import Entry, Entrant
 
@@ -79,14 +84,26 @@ ENTRY_REGEX = re.compile(
 
 
 def scrap_page(url):
+    # TODO: Use the API for everything
     doc = pq(url=url)
+    split_url = url.split("/")
+    post_id = split_url[-2]
+    blog_id = split_url[2]
+    api_url = "http://api.tumblr.com/v2/blog/%s/posts/text?id=%s&api_key=%s" % (
+        blog_id, post_id, settings.TUMBLR_API_KEY)
+    response = json.loads(requests.get(api_url).content)
+    # TODO: There has to be a better way, but this work
+    struct = time.strptime(response["response"]["posts"][0]["date"],
+            "%Y-%m-%d %H:%M:%S %Z")
+    date = datetime.datetime.fromtimestamp(time.mktime(struct))
+
     children = doc.find("div.single").children()
-    title = children.pop(0).text
-    children.pop(0)  # random action <div>
-    children.pop(-1)  # random <div> at the end
+    title = response["response"]["posts"][0]["title"] or "N/A"
+    children = children[2:-1]
     text = "".join([a.text_content() for a in children])
     entry = {
             "url": url,
+            "created_on": date,
             "title": title,
             "data": {},
             "invalid": False,
@@ -98,6 +115,7 @@ def scrap_page(url):
     for key, value in result.groupdict().items():
         entry["data"][key.strip()] = value.strip()
     return entry
+
 
 def cmd():
     entry_urls = find_all_entries()
@@ -117,10 +135,16 @@ def cmd():
                         country=entrant_data[3])
         if Entry.objects.filter(url=data["url"]).count() > 0:
             continue
+        data_for_model = {
+            "title": data["title"],
+            "url": data["url"],
+            "created_on": data["created_on"],
+        }
         if data["invalid"]:
-            Entry.objects.create(url=data["url"], invalid=True)
+            data_for_model["invalid"] = True
         else:
-            Entry.objects.create(title=data["title"], url=data["url"], **data["data"])
+            data_for_model.update(data["data"])
+        Entry.objects.create(**data_for_model)
 
 
 # Now we need to process each page and scrap the data from it.
