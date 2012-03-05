@@ -1,7 +1,10 @@
+import datetime
 from django.db import connection
 from django.views.generic.list import ListView
 
 from . import models
+
+START = datetime.datetime(year=2012, month=2, day=27)
 
 
 class MainPageView(ListView):
@@ -18,7 +21,15 @@ class MainPageView(ListView):
             ORDER BY created_on_day
         """)
         # TODO: Isn't there an opposite of zip()?
-        return cursor.fetchall()
+        data = zip(
+            [START + datetime.timedelta(days=i) for i in range(20)],
+            [0, ] * 20
+        )
+        for row in cursor.fetchall():
+            if (row[0], 0) in data:
+                idx = data.index((row[0], 0))
+                data[idx] = row
+        return data
 
     def as_javascript(self, data):
         return "{%s}" % ", ".join([('"%s": %d' % (k, v)) for k, v in data])

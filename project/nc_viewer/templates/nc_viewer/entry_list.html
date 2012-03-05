@@ -93,7 +93,7 @@ $(function() {
         data = {{ js_totals|safe }},
         dataValues = _.values(data),
         dataKeys = _.keys(data),
-        w = numberOfSubmissions.width() / 19,
+        w = numberOfSubmissions.width() / 20,
         h = 80,
         x = d3.scale.linear()
             .domain([0, 1])
@@ -103,7 +103,7 @@ $(function() {
             .rangeRound([0, h]),
         chart = d3.select("#numberOfSubmissions").append("svg")
             .attr("class", "chart")
-            .attr("width", w * 19);
+            .attr("width", w * 20);
         // Create the individual bars
         chart.selectAll("rect").data(dataValues)
             .enter().append("rect")
@@ -125,7 +125,7 @@ $(function() {
         // Add a bar along the bottom
         chart.append("line")
             .attr("x1", 0)
-            .attr("x2", w * 19)
+            .attr("x2", w * 20)
             .attr("y1", h - .5)
             .attr("y2", h - .5)
             .style("stroke", "#000");
