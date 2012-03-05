@@ -20,11 +20,11 @@ class MainPageView(ListView):
             GROUP BY created_on_day
             ORDER BY created_on_day
         """)
-        # TODO: Isn't there an opposite of zip()?
         data = zip(
             [START + datetime.timedelta(days=i) for i in range(20)],
             [0, ] * 20
         )
+        # TODO: Isn't there a better way to inject these?
         for row in cursor.fetchall():
             if (row[0], 0) in data:
                 idx = data.index((row[0], 0))
