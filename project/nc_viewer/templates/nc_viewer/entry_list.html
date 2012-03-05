@@ -113,14 +113,14 @@ $(function() {
             .attr("height", function(d) { console.log("y(" + d + ") == " + y(d)); return y(d); });
 
         // Add label to each of the bars
-        chart.selectAll("text").data(data)
-            .enter().append("text")
-            .attr("x", x)
-            .attr("y", function(d) { return y(d) + y.rangeBand() / 2; })
-            .attr("dx", -3)
-            .attr("dy", ".35em")
-            .attr("text-anchor", "end")
-            .text(String);
+        // chart.selectAll("text").data(data)
+        //     .enter().append("text")
+        //     .attr("x", x)
+        //     .attr("y", function(d) { return y(d) + y.rangeBand() / 2; })
+        //     .attr("dx", -3)
+        //     .attr("dy", ".35em")
+        //     .attr("text-anchor", "end")
+        //     .text(String);
 
         // Add a bar along the bottom
         chart.append("line")
